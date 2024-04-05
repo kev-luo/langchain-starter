@@ -21,7 +21,9 @@ from langserve import add_routes
 load_dotenv()
 
 # 1. Load Retriever
-loader = WebBaseLoader("https://docs.smith.langchain.com/user_guide")
+loader = WebBaseLoader(
+    "https://developer.salesforce.com/docs/platform/graphql/guide/graphql-about.html"
+)
 docs = loader.load()
 text_splitter = RecursiveCharacterTextSplitter()
 documents = text_splitter.split_documents(docs)
@@ -32,8 +34,8 @@ retriever = vector.as_retriever()
 # 2. Create Tools
 retriever_tool = create_retriever_tool(
     retriever,
-    "langsmith_search",
-    "Search for information about LangSmith. For any questions about LangSmith, you must use this tool!",
+    "salesforce_graphql",
+    "Search for information about GraphQL in Salesforce. For any questions about using GraphQL within the Salesforce ecosystem, you must use this tool!",
 )
 search = TavilySearchResults()
 tools = [retriever_tool, search]
@@ -41,7 +43,7 @@ tools = [retriever_tool, search]
 
 # 3. Create Agent
 prompt = hub.pull("hwchase17/openai-functions-agent")
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5)
 agent = create_openai_functions_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
