@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 
 from fastapi import FastAPI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
+
+# from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -43,7 +45,7 @@ tools = [retriever_tool, search]
 
 # 3. Create Agent
 prompt = hub.pull("hwchase17/openai-functions-agent")
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5)
+llm = ChatGroq(temperature=0.5, model="mixtral-8x7b-32768")
 agent = create_openai_functions_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
